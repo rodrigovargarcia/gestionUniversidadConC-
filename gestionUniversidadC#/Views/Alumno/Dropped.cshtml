@@ -1,0 +1,72 @@
+﻿@model List<gestionUniversidadC_.Models.TableViewModels.AlumnoTableViewModels>
+@{
+    ViewBag.Title = "Papelera";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <table class="table table-bordered">
+            <tr style="text-align:center;">
+                <td>#</td>
+                <td>Nombre</td>
+                <td>Apellido</td>
+                <td>Dni</td>
+                <td>Telefono</td>
+                <td>Legajo</td>
+                <td>Estado</td>
+                <td>Carrera</td>
+                <td>Acción</td>
+            </tr>
+            @foreach (var oElemento in Model)
+            {
+                <tr>
+                    <td>@oElemento.Id</td>
+                    <td>@oElemento.Nombre</td>
+                    <td>@oElemento.Apellido</td>
+                    <td>@oElemento.Dni</td>
+                    <td>@oElemento.Telefono</td>
+                    <td>@oElemento.Legajo</td>
+                    <td>
+                        @if (oElemento.Estado == 3)
+                        {
+                            <span>Dado de baja</span>
+                        }                        
+                    </td>
+                    <td>
+                        @{
+                            var NombreCarrera = oElemento.NombreCarrera;
+                            if (!string.IsNullOrEmpty(NombreCarrera))
+                            {
+                                @NombreCarrera
+                            }
+                            else
+                            {
+                                <span>No funca</span>
+                            }
+                        }
+                    </td>
+                    <td style="text-align:center; justify-content: space-around;">                        
+                        <input type="button" value="Dar de alta" class="btn btn-success" onclick="darAlta(@oElemento.Id)" />
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<script>
+    function darAlta(id) {
+        var confirmacion = confirm("¿Seguro quieres dar de alta?");
+
+        if (confirmacion) {
+            document.location.href = '@Url.Content("~/Alumno/Enable/")' + id;
+        }
+        else {
+            alert("Ocurrió un error :(");
+        }
+    }
+</script>
+
+

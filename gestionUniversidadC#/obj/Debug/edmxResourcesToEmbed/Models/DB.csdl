@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="gestion_universidadModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityContainer Name="gestion_universidadEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="usuario" EntityType="gestion_universidadModel.usuario" />
+    <EntitySet Name="registro_materia_por_alumno" EntityType="gestion_universidadModel.registro_materia_por_alumno" />
+    <EntitySet Name="carrera" EntityType="gestion_universidadModel.carrera" />
+    <EntitySet Name="materia" EntityType="gestion_universidadModel.materia" />
+    <AssociationSet Name="FK_materia_carrera" Association="gestion_universidadModel.FK_materia_carrera">
+      <End Role="carrera" EntitySet="carrera" />
+      <End Role="materia" EntitySet="materia" />
+    </AssociationSet>
+    <AssociationSet Name="FK_registro_materia_por_alumno_materia" Association="gestion_universidadModel.FK_registro_materia_por_alumno_materia">
+      <End Role="materia" EntitySet="materia" />
+      <End Role="registro_materia_por_alumno" EntitySet="registro_materia_por_alumno" />
+    </AssociationSet>
+    <EntitySet Name="alumno" EntityType="gestion_universidadModel.alumno" />
+    <AssociationSet Name="FK_alumno_carrera" Association="gestion_universidadModel.FK_alumno_carrera">
+      <End Role="carrera" EntitySet="carrera" />
+      <End Role="alumno" EntitySet="alumno" />
+    </AssociationSet>
+    <AssociationSet Name="FK_registro_materia_por_alumno_alumno" Association="gestion_universidadModel.FK_registro_materia_por_alumno_alumno">
+      <End Role="alumno" EntitySet="alumno" />
+      <End Role="registro_materia_por_alumno" EntitySet="registro_materia_por_alumno" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="usuario">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="administrador" Type="Boolean" />
+    <Property Name="estado" Type="Int32" />
+  </EntityType>
+  <EntityType Name="registro_materia_por_alumno">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="materia_id" Type="Int32" />
+    <Property Name="alumno_id" Type="Int32" />
+    <Property Name="estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="fecha" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="materia" Relationship="gestion_universidadModel.FK_registro_materia_por_alumno_materia" FromRole="registro_materia_por_alumno" ToRole="materia" />
+    <NavigationProperty Name="alumno" Relationship="gestion_universidadModel.FK_registro_materia_por_alumno_alumno" FromRole="registro_materia_por_alumno" ToRole="alumno" />
+  </EntityType>
+  <EntityType Name="carrera">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="duracion_anios" Type="Int32" />
+    <Property Name="estado" Type="Int32" />
+    <NavigationProperty Name="materia" Relationship="gestion_universidadModel.FK_materia_carrera" FromRole="carrera" ToRole="materia" />
+    <NavigationProperty Name="alumno" Relationship="gestion_universidadModel.FK_alumno_carrera" FromRole="carrera" ToRole="alumno" />
+  </EntityType>
+  <EntityType Name="materia">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nombre_materia" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="horas_cursado" Type="Int32" />
+    <Property Name="duracion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="carrera_id" Type="Int32" />
+    <NavigationProperty Name="carrera" Relationship="gestion_universidadModel.FK_materia_carrera" FromRole="materia" ToRole="carrera" />
+    <NavigationProperty Name="registro_materia_por_alumno" Relationship="gestion_universidadModel.FK_registro_materia_por_alumno_materia" FromRole="materia" ToRole="registro_materia_por_alumno" />
+  </EntityType>
+  <Association Name="FK_materia_carrera">
+    <End Type="gestion_universidadModel.carrera" Role="carrera" Multiplicity="0..1" />
+    <End Type="gestion_universidadModel.materia" Role="materia" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="carrera">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="materia">
+        <PropertyRef Name="carrera_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_registro_materia_por_alumno_materia">
+    <End Type="gestion_universidadModel.materia" Role="materia" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="gestion_universidadModel.registro_materia_por_alumno" Role="registro_materia_por_alumno" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="materia">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="registro_materia_por_alumno">
+        <PropertyRef Name="materia_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="alumno">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="apellido" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="dni" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="legajo" Type="Int32" />
+    <Property Name="estado" Type="Int32" />
+    <Property Name="carrera_id" Type="Int32" />
+    <NavigationProperty Name="carrera" Relationship="gestion_universidadModel.FK_alumno_carrera" FromRole="alumno" ToRole="carrera" />
+    <NavigationProperty Name="registro_materia_por_alumno" Relationship="gestion_universidadModel.FK_registro_materia_por_alumno_alumno" FromRole="alumno" ToRole="registro_materia_por_alumno" />
+  </EntityType>
+  <Association Name="FK_alumno_carrera">
+    <End Type="gestion_universidadModel.carrera" Role="carrera" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="gestion_universidadModel.alumno" Role="alumno" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="carrera">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="alumno">
+        <PropertyRef Name="carrera_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_registro_materia_por_alumno_alumno">
+    <End Type="gestion_universidadModel.alumno" Role="alumno" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="gestion_universidadModel.registro_materia_por_alumno" Role="registro_materia_por_alumno" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="alumno">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="registro_materia_por_alumno">
+        <PropertyRef Name="alumno_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

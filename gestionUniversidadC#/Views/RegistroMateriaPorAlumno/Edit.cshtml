@@ -1,0 +1,46 @@
+﻿@model gestionUniversidadC_.Models.ViewModels.RegistrosMateriasPorAlumnoEditViewModel
+@{
+    ViewBag.Title = "Editar Nuevo Registro";
+    List<SelectListItem> items1 = (List<SelectListItem>)ViewBag.items;
+    List<SelectListItem> items2 = (List<SelectListItem>)ViewBag.items2;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-lg-12">
+        @using (Html.BeginForm("Edit", "RegistroMateriaPorAlumno", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken();
+            @Html.ValidationMessage("error", new { @class = "text-danger" });
+
+            @Html.LabelFor(d => d.MateriaId)
+            @Html.DropDownListFor(d => d.MateriaId, items1, new { @class = "form-control" })
+            @Html.ValidationMessage("MateriaId", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.AlumnoId)
+            @Html.DropDownListFor(d => d.AlumnoId, items2, new { @class = "form-control" })
+            @Html.ValidationMessage("AlumnoId", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.Estado)
+            @Html.DropDownListFor(d => d.Estado, new SelectList(
+                new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Aprobado", Value = "1"},
+                    new SelectListItem { Text = "Desaprobado", Value = "2"},
+                    new SelectListItem { Text = "Regular", Value = "3"},
+                    new SelectListItem { Text = "Libre", Value = "4"}
+                }, "Value", "Text"), "Seleccione una opción", new { @class = "form-control" })
+            @Html.ValidationMessage("Estado", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.Fecha) <br />
+            @Html.EditorFor(d => d.Fecha, new { @class = "form-control datepicker", @format = "dd/MM/yyyy" })
+            @Html.ValidationMessage("Fecha", new { @class = "text-danger" })<br />
+
+
+            <div style="text-align:right;">
+                <input type="submit" class="btn btn-success" value="Guardar" />
+            </div>
+        }
+    </div>
+</div>

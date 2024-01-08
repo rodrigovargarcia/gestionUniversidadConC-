@@ -1,0 +1,93 @@
+﻿@model gestionUniversidadC_.Models.ViewModels.RegistrosMateriasPorAlumnoViewModel
+@{
+    ViewBag.Title = "Agregar Nuevo Registro";
+    List<SelectListItem> items1 = (List<SelectListItem>)ViewBag.items;
+    List<SelectListItem> items2 = (List<SelectListItem>)ViewBag.items2;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-lg-12">
+        @using (Html.BeginForm("Add", "RegistroMateriaPorAlumno", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken();
+            @Html.ValidationMessage("error", new { @class = "text-danger" });
+
+            @Html.LabelFor(d => d.AlumnoId)
+            @Html.DropDownListFor(d => d.AlumnoId, items2, new { @class = "form-control", @id = "alumnoDropDown" })
+            @Html.ValidationMessage("AlumnoId", new { @class = "text-danger" })<br />
+
+
+
+            @Html.LabelFor(d => d.MateriaId)
+            @Html.DropDownListFor(d => d.MateriaId, new List<SelectListItem>(), new { @class = "form-control", @id = "materiaDropDown" })
+            @Html.ValidationMessage("MateriaId", new { @class = "text-danger" })<br />
+
+
+            @Html.LabelFor(d => d.Estado)
+            @Html.DropDownListFor(d => d.Estado, new SelectList(
+                new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Aprobado", Value = "1"},
+                    new SelectListItem { Text = "Desaprobado", Value = "2"},
+                    new SelectListItem { Text = "Regular", Value = "3"},
+                    new SelectListItem { Text = "Libre", Value = "4"}
+                }, "Value", "Text"), "Seleccione una opción", new { @class = "form-control" })
+            @Html.ValidationMessage("Estado", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.Fecha) <br />
+            @Html.EditorFor(d => d.Fecha, new { @class = "form-control datepicker", @format = "dd/MM/yyyy" })
+            @Html.ValidationMessage("Fecha", new { @class = "text-danger" })<br />
+
+
+            <div style="text-align:right;">
+                <input type="submit" class="btn btn-success" value="Guardar" />
+            </div>
+        }
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>   
+
+    $(document).ready(function () {
+    $("#alumnoDropDown").change(function () {
+        var selectedAlumnoId = $(this).val();
+
+        $.ajax({
+            url: '@Url.Action("ObtenerCarreraIdPorAlumnoId", "RegistroMateriaPorAlumno")',
+            type: 'GET',
+            data: { alumnoId: selectedAlumnoId },
+            success: function (carreraId) {
+
+                $.ajax({
+                    url: '@Url.Action("ConvierteDropDownMatPorCarrera", "RegistroMateriaPorAlumno")',
+                    type: 'GET',
+                    data: { carreraId: carreraId },
+                    success: function (materiaId) {
+                        console.log("Materias obtenidas:");
+                        console.log(materiaId);
+                        var materiaDropDown = $("#materiaDropDown");
+                        materiaDropDown.empty();
+
+                        $.each(materiaId, function (index, materia) {
+                            console.log("Añadiendo materia:", materia);
+                            materiaDropDown.append($('<option>', {
+                                value: materia.Id,
+                                text: materia.NombreMateria
+                            }));
+                        });
+                    },
+                    error: function () {
+                        console.log('error en la segunda solicitud AJAX loquito');
+                    }
+                })
+            },
+            error: function () {
+                console.log('Error en la solicitud AJAX');
+            }
+        });
+    });
+});
+</script>

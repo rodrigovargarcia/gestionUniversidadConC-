@@ -1,0 +1,43 @@
+﻿@model gestionUniversidadC_.Models.ViewModels.MateriasViewModel
+@{
+    ViewBag.Title = "Agregar Materia";
+    List<SelectListItem> items = (List<SelectListItem>)ViewBag.items;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-lg-12">
+        @using (Html.BeginForm("Add", "Materia", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken();
+            @Html.ValidationMessage("error", new { @class = "text-danger" })
+
+            @Html.LabelFor(d => d.NombreMateria)
+            @Html.TextBoxFor(d => d.NombreMateria, new { @class = "form-control" })
+            @Html.ValidationMessage("NombreMateria", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.HorasCursado)
+            @Html.TextBoxFor(d => d.HorasCursado, new { @class = "form-control", type = "number" })
+            @Html.ValidationMessage("HorasCursado", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.Duracion)
+            @Html.DropDownListFor(d => d.Duracion, new SelectList(
+                new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Anual", Value = "1" },
+                    new SelectListItem { Text = "Cuatrimestral", Value = "2"}
+                }, "Value", "Text"), "Seleccione una opción", new { @class = "form-control" })
+            @Html.ValidationMessage("Duracion", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(model => model.CarreraId)
+            @Html.DropDownListFor(model => model.CarreraId, items, "Selecciona una carrera", new { @class = "form-control" })
+            @Html.ValidationMessage("CarreraId", new { @class = "text-danger" })<br />
+
+            <div style="text-align:right;">
+                <input type="submit" class="btn btn-success" value="Guardar" />
+            </div>
+
+        }
+    </div>
+</div>

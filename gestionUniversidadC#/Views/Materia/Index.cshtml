@@ -1,0 +1,74 @@
+﻿@model List<gestionUniversidadC_.Models.TableViewModels.MateriaTableViewModels>
+@{
+    ViewBag.Title = "Materias";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-lg-12 mb-3">
+        <input type="button" class="btn btn-primary" onclick="document.location.href='@Url.Content("~/Materia/Add")'" value="Nueva Materia" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <table class="table table-bordered">
+            <tr>
+                <td>#</td>
+                <td>Nombre Materia</td>
+                <td>Horas</td>
+                <td>Duracion</td>
+                <td>Carrera</td>
+            </tr>
+            @foreach(var oElemento in Model)
+            {
+                <tr>
+                    <td>@oElemento.Id</td>
+                    <td>@oElemento.NombreMateria</td>
+                    <td>@oElemento.HorasCursado</td>
+                    <td>
+                        @if (oElemento.Duracion == "1")
+                        {
+                            <span>Anual</span>
+                        }
+                        else
+                        {
+                            <span>Cuatrimestral</span>
+                        }
+                    </td>
+                    <td>
+                        @{
+                            var NombreCarrera = oElemento.NombreCarrera;
+                            if (!string.IsNullOrEmpty(NombreCarrera))
+                            {
+                                @NombreCarrera
+                            }
+                            else
+                            {
+                                <span>No Funca tampoco :(</span>
+                            }
+                        }
+                    </td>
+
+                    <td>
+                        <input type="button" value="Editar" class="btn btn-secondary" onclick="document.location.href='@Url.Content("~/Materia/Edit/" + oElemento.Id)'" />
+                        <input type="button" value="Eliminar" class="btn btn-danger" onclick="confirmaEliminacion(@oElemento.Id)" />
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<script>
+    function confirmaEliminacion(id) {
+        confirmacion = confirm("Estás seguro de eliminar la materia?");
+
+        if (confirmacion) {
+            document.location.href = '@Url.Content("~/Materia/Delete/")' + id;
+        }
+        else {
+            alert("Ocurrió un error :(");
+        }
+    }
+</script>

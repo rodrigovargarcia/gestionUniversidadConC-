@@ -1,0 +1,56 @@
+﻿@model gestionUniversidadC_.Models.ViewModels.AlumnosEditViewModels
+
+@{
+    ViewBag.Title = "Editar Alumno";
+    List<SelectListItem> items = (List<SelectListItem>)ViewBag.items;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-lg-12">
+        @using (Html.BeginForm("Edit", "Alumno", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken();
+            @Html.ValidationMessage("error", new { @class = "text-danger" })
+
+            @Html.LabelFor(d => d.Nombre)
+            @Html.TextBoxFor(d => d.Nombre, new { @class = "form-control" })
+            @Html.ValidationMessage("Nombre", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.Apellido)
+            @Html.TextBoxFor(d => d.Apellido, new { @class = "form-control" })
+            @Html.ValidationMessage("Apellido", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.Dni)
+            @Html.TextBoxFor(d => d.Dni, new { @class = "form-control" })
+            @Html.ValidationMessage("Dni", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.Telefono)
+            @Html.TextBoxFor(d => d.Telefono, new { @class = "form-control" })
+            @Html.ValidationMessage("Telefono", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.Legajo)
+            @Html.TextBoxFor(d => d.Legajo, new { @class = "form-control", type = "number" })
+            @Html.ValidationMessage("Legajo", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(d => d.Estado)
+            @Html.DropDownListFor(d => d.Estado, new SelectList(
+                new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Activo", Value = "1" },
+                        new SelectListItem { Text = "Inactivo", Value = "2"}
+                    }, "Value", "Text"), "Seleccione una opción", new { @class = "form-control" })
+            @Html.ValidationMessage("Estado", new { @class = "text-danger" })<br />
+
+            @Html.LabelFor(model => model.CarreraId)
+            @Html.DropDownListFor(model => model.CarreraId, items, "Selecciona una carrera", new { @class = "form-control" })
+            @Html.ValidationMessage( "CarreraId" , new { @class = "text-danger" })<br />
+
+            <div style="text-align:right;">
+                <input type="submit" class="btn btn-success" value="Guardar" />
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="gestion_universidadModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="alumno">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nombre" Type="varchar" MaxLength="50" />
+    <Property Name="apellido" Type="varchar" MaxLength="50" />
+    <Property Name="dni" Type="varchar" MaxLength="50" />
+    <Property Name="telefono" Type="varchar" MaxLength="50" />
+    <Property Name="legajo" Type="int" />
+    <Property Name="estado" Type="int" />
+    <Property Name="carrera_id" Type="int" />
+  </EntityType>
+  <EntityType Name="carrera">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nombre" Type="varchar" MaxLength="50" />
+    <Property Name="duracion_anios" Type="int" />
+    <Property Name="estado" Type="int" />
+  </EntityType>
+  <EntityType Name="materia">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nombre_materia" Type="varchar" MaxLength="50" />
+    <Property Name="horas_cursado" Type="int" />
+    <Property Name="duracion" Type="varchar" MaxLength="50" />
+    <Property Name="carrera_id" Type="int" />
+  </EntityType>
+  <EntityType Name="registro_materia_por_alumno">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="materia_id" Type="int" />
+    <Property Name="alumno_id" Type="int" />
+    <Property Name="estado" Type="varchar" MaxLength="50" />
+    <Property Name="fecha" Type="datetime" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="usuario">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nombre" Type="varchar" MaxLength="50" />
+    <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="administrador" Type="bit" />
+    <Property Name="estado" Type="int" />
+  </EntityType>
+  <Association Name="FK_alumno_carrera">
+    <End Role="carrera" Type="Self.carrera" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="alumno" Type="Self.alumno" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="carrera">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="alumno">
+        <PropertyRef Name="carrera_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_materia_carrera">
+    <End Role="carrera" Type="Self.carrera" Multiplicity="0..1" />
+    <End Role="materia" Type="Self.materia" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="carrera">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="materia">
+        <PropertyRef Name="carrera_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_registro_materia_por_alumno_alumno">
+    <End Role="alumno" Type="Self.alumno" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="registro_materia_por_alumno" Type="Self.registro_materia_por_alumno" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="alumno">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="registro_materia_por_alumno">
+        <PropertyRef Name="alumno_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_registro_materia_por_alumno_materia">
+    <End Role="materia" Type="Self.materia" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="registro_materia_por_alumno" Type="Self.registro_materia_por_alumno" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="materia">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="registro_materia_por_alumno">
+        <PropertyRef Name="materia_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="gestion_universidadModelStoreContainer">
+    <EntitySet Name="alumno" EntityType="Self.alumno" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="carrera" EntityType="Self.carrera" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="materia" EntityType="Self.materia" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="registro_materia_por_alumno" EntityType="Self.registro_materia_por_alumno" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="usuario" EntityType="Self.usuario" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_alumno_carrera" Association="Self.FK_alumno_carrera">
+      <End Role="carrera" EntitySet="carrera" />
+      <End Role="alumno" EntitySet="alumno" />
+    </AssociationSet>
+    <AssociationSet Name="FK_materia_carrera" Association="Self.FK_materia_carrera">
+      <End Role="carrera" EntitySet="carrera" />
+      <End Role="materia" EntitySet="materia" />
+    </AssociationSet>
+    <AssociationSet Name="FK_registro_materia_por_alumno_alumno" Association="Self.FK_registro_materia_por_alumno_alumno">
+      <End Role="alumno" EntitySet="alumno" />
+      <End Role="registro_materia_por_alumno" EntitySet="registro_materia_por_alumno" />
+    </AssociationSet>
+    <AssociationSet Name="FK_registro_materia_por_alumno_materia" Association="Self.FK_registro_materia_por_alumno_materia">
+      <End Role="materia" EntitySet="materia" />
+      <End Role="registro_materia_por_alumno" EntitySet="registro_materia_por_alumno" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

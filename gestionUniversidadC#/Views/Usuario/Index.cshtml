@@ -1,0 +1,62 @@
+﻿@model List<gestionUniversidadC_.Models.TableViewModels.UsuarioTableViewModel>
+@{
+    ViewBag.Title = "Usuarios";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-lg-12 mb-3">
+        <input type="button" class="btn btn-primary" onclick="document.location.href='@Url.Content("~/Usuario/Add")'" value="Nuevo Usuario" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <table class="table table-bordered">
+            <tr>
+                <td>#</td>
+                <td>Nombre</td>
+                <td>Email</td>
+                <td>Administrador</td>
+            </tr>
+
+            @foreach (var oElemento in Model)
+            {
+                <tr>
+                    <td>@oElemento.Id</td>
+                    <td>@oElemento.Nombre</td>
+                    <td>@oElemento.Email</td>
+
+                    <td>
+                        @if (oElemento.Administrador)
+                        {
+                            <span>Si</span>
+                        }
+                        else
+                        {
+                            <span>No</span>
+                        }
+                    </td>
+
+                    <td>
+                        <input type="button" value="Editar" class="btn btn-secondary" onclick="document.location.href='@Url.Content("~/Usuario/Edit/" + oElemento.Id)'" />
+                        <input type="button" value="Eliminar" class="btn btn-danger" onclick="confirmaEliminacion(@oElemento.Id)" />
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<script>
+    function confirmaEliminacion(id) {
+        confirmacion = confirm('Estás seguro de eliminar el usuario?');
+
+        if (confirmacion) {
+            document.location.href = '@Url.Content("~/Usuario/Delete/")' + id;
+        }
+        else {
+            alert("Ocurrió un error :(");
+        }
+    }
+</script>
